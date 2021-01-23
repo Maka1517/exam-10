@@ -38,3 +38,12 @@ class FriendDelView(LoginRequiredMixin, View):
         like.delete()
         friend.save()
         return HttpResponse()
+
+
+class FriendListView(LoginRequiredMixin, View):
+    template_name = 'user_detail.html'
+    context_object_name = 'friends'
+    paginate_by = 3
+    paginate_orphans = 0
+    model = FriendList
+

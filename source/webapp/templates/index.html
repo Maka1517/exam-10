@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+    <h1>Welcome!</h1>
+    {% if is_paginated %}
+        {% include 'partial/pagination.html' %}
+    {% endif %}
+
+    {% for user_obj in profiles %}
+         <div class="box">
+{#            <h3><a href="{% url 'webapp:photo_view' photo.pk %}">{{ photo.text }}</a></h3>#}
+            {% if user_obj.profile.avatar %}
+                <img class="avatar" src="{{ user_obj.profile.avatar.url }}" width="50" height="50" alt="photo">
+            {% endif %}
+            <p>Имя: {{ user_obj.first_name }}</p>
+            <p>Фамилия: {{ user_obj.last_name }}</p>
+             <p><a href="{% url 'accounts:detail' user_obj.pk %}">{{ user_obj.username }}</a></p>
+
+            {% if perms.webapp.change_product or product.author == request.user %}
+{#                <p><a href="{% url 'accounts:photo_delete' photo.pk %}">Delete</a></p>#}
+{#                <p><a href="{% url 'webapp:photo_update' photo.pk %}">Update</a></p>#}
+            {% endif %}
+          <p>
+            <a class="{% if like in chosen_friend %}hidden{% endif %} like" href="{% url 'webapp:friend_chose' user_obj.pk %}">Добавить в друзья</a>
+            <a class="{% if not like in chosen_friend %}hidden{% endif %} unlike" href="{% url 'webapp:friend_del' user_obj.pk %}">Убрать из друзей</a>
+          </p>
+         </div>
+    {% endfor %}
+{% endblock %}
