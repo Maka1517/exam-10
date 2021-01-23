@@ -46,6 +46,7 @@ class Profile(models.Model):
                                               on_delete=models.CASCADE, verbose_name='Пользователь')
     birth_date = models.DateField(null=True, blank=True, verbose_name='Дата рождения')
     avatar = models.ImageField(null=True, blank=True, upload_to='user_pics', verbose_name='Аватар')
+    friends = models.ManyToManyField(get_user_model(), related_name='profiles', verbose_name='Друзья', blank=True)
 
     def __str__(self):
         return self.user.get_full_name() + "'s Profile"
@@ -53,3 +54,17 @@ class Profile(models.Model):
     class Meta:
         verbose_name = 'Профиль'
         verbose_name_plural = 'Профили'
+
+
+class FriendList(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE,
+                             related_name='friends', verbose_name='Пользователь')
+    profile = models.ForeignKey('accounts.Profile', on_delete=models.CASCADE,
+                                related_name='friend', verbose_name='Друг')
+
+    def __str__(self):
+        return f'{self.user.username} - {self.profile.avatar}'
+
+    class Meta:
+        verbose_name = 'Друг'
+        verbose_name_plural = 'Друзья'
